@@ -70,6 +70,10 @@ public class Main {
 		}
 	}
 	
+	private static void editCity() {
+		
+	}
+	
 	private static void changeLocale() {
 		System.out.println(userResourceBundle.getString("message.chooseLanguage"));
 		Locale newLocale = Locale.FRANCE;

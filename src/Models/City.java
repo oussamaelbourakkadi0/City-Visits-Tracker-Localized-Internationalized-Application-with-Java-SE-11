@@ -1,15 +1,16 @@
 package Models;
+import java.util.Date;
 import java.util.Locale;
 
 public final class City {
 	private Locale cityLocale;
 	private String cityName;
-	private String cityCountry;
+	private Date visitedDate;
 	
-	public City(Locale cityLocale, String cityName, String cityCountry) {
+	public City(Locale cityLocale, String cityName, String cityCountry, Date visitedDate) {
 		this.cityLocale = cityLocale;
 		this.cityName = cityName;
-		this.cityCountry = cityCountry;
+		this.visitedDate = visitedDate;
 	}
 
 	public Locale getCityLocale() {
@@ -20,10 +21,6 @@ public final class City {
 		return cityName;
 	}
 
-	public String getCityCountry() {
-		return cityCountry;
-	}
-
 	public void setCityLocale(Locale cityLocale) {
 		this.cityLocale = cityLocale;
 	}
@@ -31,10 +28,8 @@ public final class City {
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
 	}
-
-	public void setCityCountry(String cityCountry) {
-		this.cityCountry = cityCountry;
-	}
+	
+	
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -46,8 +41,8 @@ public final class City {
 		}
 		
 		City city = (City) obj;
-		boolean check = this.cityCountry.equals(city.cityCountry) &&
-				this.cityName.equals(city.cityName);
+		boolean check = this.cityName.equals(city.cityName) &&
+				this.visitedDate.equals(city.cityName);
 		return check;
 	}
 }

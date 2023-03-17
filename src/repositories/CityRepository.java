@@ -18,6 +18,9 @@ public class CityRepository {
 	}
 	
 	public List<City> getAll() {
+		if (cities.isEmpty()) {
+			throw new IllegalStateException();
+		}
 		return cities;
 	}
 	
