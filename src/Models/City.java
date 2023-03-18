@@ -7,6 +7,10 @@ public final class City {
 	private String cityName;
 	private Date visitedDate;
 	
+	public City() {
+		
+	}
+	
 	public City(Locale cityLocale, String cityName, String cityCountry, Date visitedDate) {
 		this.cityLocale = cityLocale;
 		this.cityName = cityName;
@@ -20,6 +24,10 @@ public final class City {
 	public String getCityName() {
 		return cityName;
 	}
+	
+	public Date getVisitedDate() {
+		return visitedDate;
+	}
 
 	public void setCityLocale(Locale cityLocale) {
 		this.cityLocale = cityLocale;
@@ -29,7 +37,9 @@ public final class City {
 		this.cityName = cityName;
 	}
 	
-	
+	public void setVisitedAt(Date visitedDate) {
+		this.visitedDate = visitedDate;
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

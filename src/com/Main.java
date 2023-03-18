@@ -1,6 +1,8 @@
 package com;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -30,7 +32,7 @@ public class Main {
 	}
 	
 	private static void menu() {
-		Scanner scanner = new Scanner (System.in);
+		
 		System.out.println(userResourceBundle.getString("menu.chooseAction"));
 		System.out.println("0 -- " + userResourceBundle.getString("menu.printAll"));
 		System.out.println("1 -- " + userResourceBundle.getString("menu.addCity"));
@@ -39,12 +41,20 @@ public class Main {
 		System.out.println("4 -- " + userResourceBundle.getString("menu.changeLocale"));
 		System.out.println("5 -- " + userResourceBundle.getString("menu.exit"));
 		
+		Scanner scanner = new Scanner (System.in);
 		String answer = scanner.nextLine();
+		scanner.close();
 		
 		switch(answer) {
 		case "0":
 			break;
 		case "1":
+			try {
+				addCity();
+			} catch (ParseException e) {
+				String addCityExceptionMessage = userResourceBundle.getString("message.addCityException");
+				System.out.println(addCityExceptionMessage);
+			}
 			break;
 		case "2":
 			break;
@@ -59,18 +69,45 @@ public class Main {
 		default:
 			break;
 		}
-				
+		
+		menu();
 	}
 	
 	private static void printAll() {
 		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, userResourceBundle.getLocale());
-		System.out.println("AVAILABLE CITIES");
+		String availableCitiesMessage = userResourceBundle.getString("message.availableCitiesStr");
+		System.out.println(availableCitiesMessage);
+		String visitedAt = userResourceBundle.getString("message.visitedAtStr");
 		for(City city: cityRepository.getAll()) {
-			System.out.println(city.getCityName() + ", " + city.getCityCountry());
+			System.out.println(city.getCityName() + ", " + visitedAt + city.getVisitedDate());
 		}
 	}
 	
 	private static void editCity() {
+		
+	}
+	
+	private static void addCity() throws ParseException {
+		String printValuesMessage = userResourceBundle.getString("message.printValues");
+		System.out.println(printValuesMessage);
+
+		Scanner scanner = new Scanner(System.in);
+		String newCityName = scanner.nextLine();
+		//scanner.close();
+		
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, userResourceBundle.getLocale());
+		String newDateStr = scanner.nextLine();
+		
+		Date newDate = dateFormat.parse(newDateStr);
+		
+		City newCity = new City();
+		newCity.setCityLocale(userResourceBundle.getLocale());
+		newCity.setCityName(newCityName);
+		newCity.setVisitedAt(newDate);
+		
+		cityRepository.addCity(newCity);
+		
+		String savedMessage = userResourceBundle.getString("message.citySaved");
 		
 	}
 	
