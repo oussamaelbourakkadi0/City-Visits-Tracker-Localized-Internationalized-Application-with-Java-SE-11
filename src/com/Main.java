@@ -2,6 +2,8 @@ package com;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -17,6 +19,7 @@ public class Main {
 	protected static ResourceBundle userResourceBundle;
 	private static final String[] locales = new String[] {"en_US", "pl_PL", "uk_UA"};
 	private static final CityRepository cityRepository = new CityRepository();
+	private static final Scanner scanner = new Scanner(System.in);
 	
 	public static void main(String... args) {
 		Locale.setDefault(Locale.US);
@@ -41,9 +44,9 @@ public class Main {
 		System.out.println("4 -- " + userResourceBundle.getString("menu.changeLocale"));
 		System.out.println("5 -- " + userResourceBundle.getString("menu.exit"));
 		
-		Scanner scanner = new Scanner (System.in);
+		//Scanner scanner = new Scanner (System.in);
 		String answer = scanner.nextLine();
-		scanner.close();
+		//scanner.close();
 		
 		switch(answer) {
 		case "0":
@@ -54,6 +57,7 @@ public class Main {
 			} catch (ParseException e) {
 				String addCityExceptionMessage = userResourceBundle.getString("message.addCityException");
 				System.out.println(addCityExceptionMessage);
+				e.printStackTrace();
 			}
 			break;
 		case "2":
@@ -88,16 +92,20 @@ public class Main {
 	}
 	
 	private static void addCity() throws ParseException {
-		String printValuesMessage = userResourceBundle.getString("message.printValues");
-		System.out.println(printValuesMessage);
-
-		Scanner scanner = new Scanner(System.in);
+		//Scanner scanner = new Scanner(System.in);
+		String printCityNameMessage = userResourceBundle.getString("message.printCityName");
+		System.out.println(printCityNameMessage);
+		
 		String newCityName = scanner.nextLine();
-		//scanner.close();
 		
-		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, userResourceBundle.getLocale());
+		String printedCityDate = userResourceBundle.getString("message.printVisitedDate");
+		System.out.println(printedCityDate);
+		
+		String datePattern = getLocaleDateFormat();
+		DateFormat dateFormat = new SimpleDateFormat(datePattern);
+		
+		
 		String newDateStr = scanner.nextLine();
-		
 		Date newDate = dateFormat.parse(newDateStr);
 		
 		City newCity = new City();
@@ -136,5 +144,18 @@ public class Main {
 			throw new InputMismatchException("INVALID CHOICE, PLEASE CHOOSE A VALID OPTION (Y or NO)");
 		}
 		
+	}
+	
+	private static String getLocaleDateFormat() {
+		String localeStr = Locale.getDefault().toString();
+		
+		switch(localeStr) {
+		case "en_US":
+			return "MM/dd/yyyy";
+		case "fr_FR":
+			return "dd/MM/yyyy";
+		default:
+			return null;
+		}
 	}
 }
