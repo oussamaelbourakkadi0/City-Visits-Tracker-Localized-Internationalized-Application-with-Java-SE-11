@@ -1,9 +1,12 @@
 package Models;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public final class City {
-	private Locale cityLocale;
 	private String cityName;
 	private Date visitedDate;
 	
@@ -11,14 +14,9 @@ public final class City {
 		
 	}
 	
-	public City(Locale cityLocale, String cityName, String cityCountry, Date visitedDate) {
-		this.cityLocale = cityLocale;
+	public City(String cityName, Date visitedDate) {
 		this.cityName = cityName;
 		this.visitedDate = visitedDate;
-	}
-
-	public Locale getCityLocale() {
-		return cityLocale;
 	}
 
 	public String getCityName() {
@@ -29,16 +27,19 @@ public final class City {
 		return visitedDate;
 	}
 
-	public void setCityLocale(Locale cityLocale) {
-		this.cityLocale = cityLocale;
-	}
-
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
 	}
 	
 	public void setVisitedAt(Date visitedDate) {
 		this.visitedDate = visitedDate;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int hashedCityName = prime * cityName.hashCode();
+		return hashedCityName;
 	}
 	
 	@Override
@@ -54,5 +55,30 @@ public final class City {
 		boolean check = this.cityName.equals(city.cityName) &&
 				this.visitedDate.equals(city.cityName);
 		return check;
+	}
+	
+	@Override
+	public String toString() {
+		Locale locale = Locale.getDefault();
+		ResourceBundle userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", locale);
+		String printCityMessage = userResourceBundle.getString("message.printCity");
+		String datePattern = getLocaleDateFormat();
+		DateFormat dateFormat = new SimpleDateFormat(datePattern);
+		String dateString = dateFormat.format(visitedDate);
+		
+		return MessageFormat.format(printCityMessage, getCityName(), dateString);
+	}
+	
+	private static String getLocaleDateFormat() {
+		String localeStr = Locale.getDefault().toString();
+		
+		switch(localeStr) {
+		case "en_US":
+			return "MM/dd/yyyy";
+		case "fr_FR":
+			return "dd/MM/yyyy";
+		default:
+			return null;
+		}
 	}
 }

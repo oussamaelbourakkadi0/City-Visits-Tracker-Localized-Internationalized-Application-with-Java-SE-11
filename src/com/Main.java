@@ -16,14 +16,15 @@ import repositories.CityRepository;
 
 public class Main {
 	
-	protected static ResourceBundle userResourceBundle;
-	private static final String[] locales = new String[] {"en_US", "pl_PL", "uk_UA"};
-	private static final CityRepository cityRepository = new CityRepository();
+	private static ResourceBundle userResourceBundle;
+	private static Locale locale;
 	private static final Scanner scanner = new Scanner(System.in);
+	private static final CityRepository cityRepository = new CityRepository();
+
 	
 	public static void main(String... args) {
 		Locale.setDefault(Locale.US);
-		Locale locale = Locale.getDefault();
+		locale = Locale.getDefault();
 		
 		try {
 			userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", locale);
@@ -43,13 +44,12 @@ public class Main {
 		System.out.println("2 -- " + userResourceBundle.getString("menu.removeCity"));
 		System.out.println("4 -- " + userResourceBundle.getString("menu.changeLocale"));
 		System.out.println("5 -- " + userResourceBundle.getString("menu.exit"));
-		
-		//Scanner scanner = new Scanner (System.in);
+
 		String answer = scanner.nextLine();
-		//scanner.close();
 		
 		switch(answer) {
 		case "0":
+			printAll();
 			break;
 		case "1":
 			try {
@@ -57,7 +57,6 @@ public class Main {
 			} catch (ParseException e) {
 				String addCityExceptionMessage = userResourceBundle.getString("message.addCityException");
 				System.out.println(addCityExceptionMessage);
-				e.printStackTrace();
 			}
 			break;
 		case "2":
@@ -77,22 +76,22 @@ public class Main {
 		menu();
 	}
 	
-	private static void printAll() {
-		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, userResourceBundle.getLocale());
+	public static void printAll() {
 		String availableCitiesMessage = userResourceBundle.getString("message.availableCitiesStr");
 		System.out.println(availableCitiesMessage);
-		String visitedAt = userResourceBundle.getString("message.visitedAtStr");
-		for(City city: cityRepository.getAll()) {
-			System.out.println(city.getCityName() + ", " + visitedAt + city.getVisitedDate());
-		}
+		System.out.println(cityRepository.getAll());
 	}
 	
-	private static void editCity() {
+	public static void editCity() {
+		printAll();
+		String editMessage = userResourceBundle.getString("message.chooseIndexForEdit");
+		System.out.println(editMessage);
+		
+		int index = scanner.nextInt();
 		
 	}
 	
-	private static void addCity() throws ParseException {
-		//Scanner scanner = new Scanner(System.in);
+	public static void addCity() throws ParseException {
 		String printCityNameMessage = userResourceBundle.getString("message.printCityName");
 		System.out.println(printCityNameMessage);
 		
@@ -108,30 +107,27 @@ public class Main {
 		String newDateStr = scanner.nextLine();
 		Date newDate = dateFormat.parse(newDateStr);
 		
-		City newCity = new City();
-		newCity.setCityLocale(userResourceBundle.getLocale());
-		newCity.setCityName(newCityName);
-		newCity.setVisitedAt(newDate);
-		
+		City newCity = new City(newCityName, newDate);
 		cityRepository.addCity(newCity);
 		
 		String savedMessage = userResourceBundle.getString("message.citySaved");
-		
 	}
 	
-	private static void changeLocale() {
+	public static void changeLocale() {
 		System.out.println(userResourceBundle.getString("message.chooseLanguage"));
-		Locale newLocale = Locale.FRANCE;
+		
+		String defaultLocaleStr = locale.toString();
+		
+		
 		Scanner scanner = new Scanner(System.in);
-		String answer = scanner.next();
-		answer.toUpperCase();
+		String answer = scanner.next().toUpperCase();
 		
 		if(answer.equals("N") || answer.equals("NO")) {
 			menu();
 		}
 		else if(answer.equals("Y") || answer.equals("YES")) {
 			try {
-				userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", newLocale);
+				//userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", newLocale);
 				System.out.println(userResourceBundle.getString("message.welcome"));
 			} catch (Exception ex) {
 				System.out.println(userResourceBundle.getString("message.tryAgain"));
@@ -146,7 +142,7 @@ public class Main {
 		
 	}
 	
-	private static String getLocaleDateFormat() {
+	public static String getLocaleDateFormat() {
 		String localeStr = Locale.getDefault().toString();
 		
 		switch(localeStr) {
@@ -158,4 +154,5 @@ public class Main {
 			return null;
 		}
 	}
+	
 }
