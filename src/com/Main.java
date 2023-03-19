@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import Models.City;
+import Utils.LocaleDateFormatter;
+import Utils.LocaleDateFormatter.*;
 import repositories.CityRepository;
 
 public class Main {
@@ -100,12 +102,8 @@ public class Main {
 		String printedCityDate = userResourceBundle.getString("message.printVisitedDate");
 		System.out.println(printedCityDate);
 		
-		String datePattern = getLocaleDateFormat();
-		DateFormat dateFormat = new SimpleDateFormat(datePattern);
-		
-		
 		String newDateStr = scanner.nextLine();
-		Date newDate = dateFormat.parse(newDateStr);
+		Date newDate = LocaleDateFormatter.fromStringToDate(newDateStr);
 		
 		City newCity = new City(newCityName, newDate);
 		cityRepository.addCity(newCity);

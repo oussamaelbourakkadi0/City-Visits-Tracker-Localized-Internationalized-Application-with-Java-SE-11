@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import Utils.LocaleDateFormatter;
+
 public final class City {
 	private String cityName;
 	private Date visitedDate;
@@ -62,23 +64,11 @@ public final class City {
 		Locale locale = Locale.getDefault();
 		ResourceBundle userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", locale);
 		String printCityMessage = userResourceBundle.getString("message.printCity");
-		String datePattern = getLocaleDateFormat();
+		String datePattern = LocaleDateFormatter.getLocaleDateFormat();
 		DateFormat dateFormat = new SimpleDateFormat(datePattern);
 		String dateString = dateFormat.format(visitedDate);
 		
 		return MessageFormat.format(printCityMessage, getCityName(), dateString);
 	}
 	
-	private static String getLocaleDateFormat() {
-		String localeStr = Locale.getDefault().toString();
-		
-		switch(localeStr) {
-		case "en_US":
-			return "MM/dd/yyyy";
-		case "fr_FR":
-			return "dd/MM/yyyy";
-		default:
-			return null;
-		}
-	}
 }
