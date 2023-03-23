@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import Models.City;
+import Utils.ChangeLocaleUtils;
 import Utils.LocaleDateFormatter;
 import Utils.LocaleDateFormatter.*;
 import repositories.CityRepository;
@@ -113,43 +114,26 @@ public class Main {
 	
 	public static void changeLocale() {
 		System.out.println(userResourceBundle.getString("message.chooseLanguage"));
-		
-		String defaultLocaleStr = locale.toString();
-		
-		
 		Scanner scanner = new Scanner(System.in);
 		String answer = scanner.next().toUpperCase();
 		
-		if(answer.equals("N") || answer.equals("NO")) {
-			menu();
-		}
-		else if(answer.equals("Y") || answer.equals("YES")) {
-			try {
-				//userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", newLocale);
-				System.out.println(userResourceBundle.getString("message.welcome"));
-			} catch (Exception ex) {
-				System.out.println(userResourceBundle.getString("message.tryAgain"));
-				changeLocale();
-			} finally {
+		try {
+			boolean checkAnswer = ChangeLocaleUtils.checkChangeLocaleAnswer(answer);
+			if(!checkAnswer) {
 				menu();
 			}
+			else {
+				if (Locale.getDefault().toString().equals("en_US")) {
+					Locale.setDefault(Locale.FRANCE);
+				}
+				else if (Locale.getDefault().toString().equals("fr_FR")) {
+					Locale.setDefault(Locale.ENGLISH);
+				}
+			}
 		}
-		else {
-			throw new InputMismatchException("INVALID CHOICE, PLEASE CHOOSE A VALID OPTION (Y or NO)");
-		}
-		
-	}
-	
-	public static String getLocaleDateFormat() {
-		String localeStr = Locale.getDefault().toString();
-		
-		switch(localeStr) {
-		case "en_US":
-			return "MM/dd/yyyy";
-		case "fr_FR":
-			return "dd/MM/yyyy";
-		default:
-			return null;
+		catch (InputMismatchException ex) {
+			System.out.println(userResourceBundle.getString("message.printValidAnswerException"));
+			changeLocale();
 		}
 	}
 	
