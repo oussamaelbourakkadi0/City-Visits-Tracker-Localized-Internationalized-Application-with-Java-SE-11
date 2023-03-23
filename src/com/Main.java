@@ -125,9 +125,13 @@ public class Main {
 			else {
 				if (Locale.getDefault().toString().equals("en_US")) {
 					Locale.setDefault(Locale.FRANCE);
+					locale = Locale.getDefault();
+					userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", locale);
 				}
 				else if (Locale.getDefault().toString().equals("fr_FR")) {
 					Locale.setDefault(Locale.ENGLISH);
+					locale = Locale.getDefault();
+					userResourceBundle = ResourceBundle.getBundle("resources/MessageBundle", locale);
 				}
 			}
 		}
