@@ -1,5 +1,9 @@
 package repositories;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,4 +61,47 @@ public class CityRepository {
 			ex.printStackTrace();
 		}
 	}
+	
+	private  void fetchAllCities() {
+		final String citiesFilePath = "cities.txt";
+		try (FileReader fileReader = new FileReader(citiesFilePath);
+				BufferedReader reader = new BufferedReader(fileReader);) {
+			String line;
+			while((line = reader.readLine()) != null) {
+				String[] element = splitLine(line);
+			}
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private String[] splitLine(String line) {
+		String[] element = new String[2];
+		element[0] = getElementBeforeOrAfterSpcace(line, 1);
+		element[1] = getElementBeforeOrAfterSpcace(line, 2);
+		return element;
+	}
+	
+	/**
+	 * Internally used to retrieve the city or the date element from a line.
+	 * 
+	 * @param line the line that we want to split
+	 * @param splitCase the element that we want to get: 1 for the cityName and 2 for the cityDate.
+	 * @return the splitted element.	 
+	 */
+	private String getElementBeforeOrAfterSpcace(String line, int splitCase) {
+		int pos = line.indexOf(" ");
+		if(splitCase == 1) {
+			return line.substring(0, pos);
+		}
+		else if(splitCase == 2) {
+			return line.substring(pos);
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+	}
+	
 }
