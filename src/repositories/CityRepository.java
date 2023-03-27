@@ -1,9 +1,14 @@
 package repositories;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +22,7 @@ import Models.City;
 public class CityRepository {
 	
 	private static List<City> cities;
+	private static final String citiesFilePath = "cities.txt";
 	
 	public CityRepository() {
 		cities = new ArrayList<>();
@@ -62,8 +68,19 @@ public class CityRepository {
 		}
 	}
 	
+	private void storeCity(City city) {
+		try(RandomAccessFile myFile = new RandomAccessFile("file", "rw");
+				FileOutputStream file = new FileOutputStream(myFile.getFD()); 
+				BufferedOutputStream out = new BufferedOutputStream(file);) {
+			long fileLenght = myFile.length();
+			myFile.seek(fileLenght);
+			out.write(city.getCityName().getBytes());
+		} catch (IOException ex) {
+			
+		}
+	}
+	
 	private  void fetchAllCities() {
-		final String citiesFilePath = "cities.txt";
 		try (FileReader fileReader = new FileReader(citiesFilePath);
 				BufferedReader reader = new BufferedReader(fileReader);) {
 			String line;
@@ -89,7 +106,7 @@ public class CityRepository {
 	 * 
 	 * @param line the line that we want to split
 	 * @param splitCase the element that we want to get: 1 for the cityName and 2 for the cityDate.
-	 * @return the splitted element.	 
+	 * @return the cityName or the cityDate element as a String.	 
 	 */
 	private String getElementBeforeOrAfterSpcace(String line, int splitCase) {
 		int pos = line.indexOf(" ");
